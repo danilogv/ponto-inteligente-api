@@ -1,6 +1,6 @@
-package com.kazale.pontointeligente.api.entidades;
+package com.kazale.pontointeligente.api.entidade;
 
-import com.kazale.pontointeligente.api.enumeracoes.Perfil;
+import com.kazale.pontointeligente.api.enumeracao.Perfil;
 
 import javax.persistence.*;
 import java.io.Serializable;
