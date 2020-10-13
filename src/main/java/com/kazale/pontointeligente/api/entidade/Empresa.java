@@ -1,5 +1,9 @@
 package com.kazale.pontointeligente.api.entidade;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -10,13 +14,16 @@ import java.util.List;
 public class Empresa implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "razao_social", nullable = false)
+    @NotEmpty(message = "Razão Social não pode ser vazio")
     private String razaoSocial;
 
     @Column(name = "cnpj", nullable = false)
+    @NotEmpty(message = "CNPJ não pode ser vazio")
+    @Length(min = 14, max = 14, message = "CNPJ deve conter 14 caracteres")
     private String cnpj;
 
     @Column(name = "data_criacao", nullable = false)
@@ -25,7 +32,8 @@ public class Empresa implements Serializable {
     @Column(name = "data_atualizacao", nullable = false)
     private Date dataAtualizacao;
 
-    @OneToMany(mappedBy = "empresa", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private List<Funcionario> funcionarios;
 
     public Integer getId() {

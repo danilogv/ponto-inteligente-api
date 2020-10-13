@@ -1,6 +1,10 @@
 package com.kazale.pontointeligente.api.entidade;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kazale.pontointeligente.api.enumeracao.Perfil;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,16 +17,23 @@ import java.util.List;
 public class Funcionario implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "nome", nullable = false)
+    @NotEmpty(message = "Nome não pode ser vazio.")
+    @Length(max = 255, message = "Nome deve conter no máximo 255 caracteres")
     private String nome;
 
     @Column(name = "email", nullable = false)
+    @NotEmpty(message = "Email não pode ser vazio.")
+    @Length(max = 255, message = "Email deve conter no máximo 255 caracteres")
+    @Email(message="Email inválido")
     private String email;
 
     @Column(name = "cpf", nullable = false)
+    @NotEmpty(message = "CPF não pode ser vazio")
+    @Length(min = 11, max = 11, message = "CPF deve conter 11 caracteres")
     private String cpf;
 
     @Column(name = "valor_hora", nullable = true)
@@ -36,6 +47,8 @@ public class Funcionario implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "perfil", nullable = false)
+    @NotEmpty(message = "Perfil não pode ser vazio")
+    @Length(max = 255, message = "Perfil deve conter no máximo 255 caracteres")
     private Perfil perfil;
 
     @Column(name = "data_criacao", nullable = false)
@@ -44,10 +57,12 @@ public class Funcionario implements Serializable {
     @Column(name = "data_atualizacao", nullable = false)
     private Date dataAtualizacao;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @JoinColumn(name = "empresa_id")
     private Empresa empresa;
 
-    @OneToMany(mappedBy = "funcionario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "funcionario", cascade = CascadeType.ALL)
     private List<Lancamento> lancamentos;
 
     public Integer getId() {
